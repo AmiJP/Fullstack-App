@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/yourusername/your-repo.git'
+                git 'https://github.com/AmiJP/Fullstack-App.git'
             }
         }
         stage('Install Dependencies') {
@@ -18,12 +18,11 @@ pipeline {
         }
         stage('Build (if needed)') {
             steps {
-                sh 'npm run build' // for React or custom build script for Node
+                sh 'npm run build' 
             }
         }
         stage('Deploy') {
             steps {
-                // For education, use a simple deploy: copy files to a test VM, run Docker, or use Heroku CLI
                 sh '''
                     echo "Deploy steps go here: e.g., scp files to server, ssh and restart service, etc."
                 '''

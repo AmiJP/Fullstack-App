@@ -1,5 +1,4 @@
-name: Backend CI
-
+name: Servrer CI
 on: [push]
 
 jobs:

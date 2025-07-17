@@ -16,6 +16,9 @@ jobs:
       - name: Install dependencies
         run: npm install
       
+      - name: Make cross-env executable
+        run: chmod +x ./node_modules/.bin/cross-env
+
       - name: Make jest executable
         run: chmod +x ./node_modules/.bin/jest
 

@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 function App() {
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    fetch('http://localhost:3000/hello')
-      .then(res => res.text())
-      .then(setMessage);
-  }, []);
-
-  return <div>{message}</div>;
+  return(
+    <div>
+      <h1>Welcome to the Fullstack App</h1>
+      <p>This is a simple React application.</p>
+    </div>
+  )
 }
 
 export default App;

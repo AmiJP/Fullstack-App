@@ -5,17 +5,20 @@
   "type": "module",
   "scripts": {
     "start": "nodemon index.js",
-    "dev": "nodemon index.js",
-    "test": "jest"
+    "dev": "nodemon server.js",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "cross-env": "^7.0.3",
     "express": "^5.1.0",
     "nodemon": "^3.1.10"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.28.0",
+    "babel-jest": "^30.0.4",
     "jest": "^30.0.4",
     "supertest": "^7.1.3"
   }

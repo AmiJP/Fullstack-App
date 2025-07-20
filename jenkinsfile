@@ -6,36 +6,55 @@ pipeline {
     }
     
     environment {
-        NODEJS_HOME = tool 'NodeJS'
-        PATH = "${env.NODEJS_HOME}\\npm;${env.NODEJS_HOME};${env.PATH}"
+        NODEJS_HOME = tool name: 'NodeJS'
+        NODE_PATH = "${NODEJS_HOME}\\node_modules"
+        PATH = "${NODEJS_HOME};${NODE_PATH};${env.PATH}"
     }
     
     stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        
         stage('Clone Repo') {
             steps {
+                checkout scm: [$class: 'GitSCM', 
+                    userRemoteConfigs: [[url: 'https://github.com/AmiJP/Fullstack-App.git']], 
+                    branches: [[name: '*/main']]
+                ]
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
                 script {
-                    bat 'if exist * del /q *'
-                    bat 'if exist .* del /q .*'
-                    bat 'git clone https://github.com/AmiJP/Fullstack-App.git .'
+                    def nodeCmd = isUnix() ? 'npm' : 'npm.cmd'
+                    bat "${nodeCmd} config set registry https://registry.npmjs.org/"
+                    bat "${nodeCmd} install"
                 }
             }
         }
-        stage('Install Dependencies') {
-            steps {
-                bat 'npm config set registry https://registry.npmjs.org/'
-                bat 'npm install'
-            }
-        }
+        
         stage('Run Tests') {
             steps {
-                bat 'npm test'
+                script {
+                    def nodeCmd = isUnix() ? 'npm' : 'npm.cmd'
+                    bat "${nodeCmd} test"
+                }
             }
         }
+        
         stage('Build') {
             steps {
-                bat 'npm run build'
+                script {
+                    def nodeCmd = isUnix() ? 'npm' : 'npm.cmd'
+                    bat "${nodeCmd} run build"
+                }
             }
         }
+        
         stage('Deploy') {
             steps {
                 bat 'echo "Deploy steps go here"'
@@ -44,11 +63,8 @@ pipeline {
     }
     
     post {
-        failure {
-            bat 'echo "Build failed"'
-        }
-        success {
-            bat 'echo "Build succeeded"'
+        always {
+            cleanWs()
         }
     }
 }

@@ -7,46 +7,48 @@ pipeline {
     
     environment {
         NODEJS_HOME = tool 'NodeJS'
-        PATH = "${NODEJS_HOME};${env.PATH}"
+        PATH = "${env.NODEJS_HOME}\\npm;${env.NODEJS_HOME};${env.PATH}"
     }
     
     stages {
         stage('Clone Repo') {
             steps {
-                bat 'git clone https://github.com/AmiJP/Fullstack-App.git .'
+                script {
+                    bat 'if exist * del /q *'
+                    bat 'if exist .* del /q .*'
+                    bat 'git clone https://github.com/AmiJP/Fullstack-App.git .'
+                }
             }
         }
         stage('Install Dependencies') {
             steps {
-                powershell '''
-                    npm config set registry https://registry.npmjs.org/
-                    npm install
-                '''
+                bat 'npm config set registry https://registry.npmjs.org/'
+                bat 'npm install'
             }
         }
         stage('Run Tests') {
             steps {
-                powershell 'npm test'
+                bat 'npm test'
             }
         }
-        stage('Build (if needed)') {
+        stage('Build') {
             steps {
-                powershell 'npm run build'
+                bat 'npm run build'
             }
         }
         stage('Deploy') {
             steps {
-                powershell 'Write-Host "Deploy steps go here"'
+                bat 'echo "Deploy steps go here"'
             }
         }
     }
     
     post {
         failure {
-            powershell 'Write-Host "Build failed"'
+            bat 'echo "Build failed"'
         }
         success {
-            powershell 'Write-Host "Build succeeded"'
+            bat 'echo "Build succeeded"'
         }
     }
 }

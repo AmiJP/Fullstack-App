@@ -2,44 +2,51 @@ pipeline {
     agent any
     
     tools {
-        nodejs 'NodeJS' // Make sure you have NodeJS configured in Jenkins
+        nodejs 'NodeJS'
+    }
+    
+    environment {
+        NODEJS_HOME = tool 'NodeJS'
+        PATH = "${NODEJS_HOME};${env.PATH}"
     }
     
     stages {
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/AmiJP/Fullstack-App.git'
+                bat 'git clone https://github.com/AmiJP/Fullstack-App.git .'
             }
         }
         stage('Install Dependencies') {
             steps {
-                bat 'npm config set registry https://registry.npmjs.org/'
-                bat 'npm install'
+                powershell '''
+                    npm config set registry https://registry.npmjs.org/
+                    npm install
+                '''
             }
         }
         stage('Run Tests') {
             steps {
-                bat 'npm test'
+                powershell 'npm test'
             }
         }
         stage('Build (if needed)') {
             steps {
-                bat 'npm run build'
+                powershell 'npm run build'
             }
         }
         stage('Deploy') {
             steps {
-                bat 'echo "Deploy steps go here"'
+                powershell 'Write-Host "Deploy steps go here"'
             }
         }
     }
     
     post {
         failure {
-            bat 'echo "Build failed"'
+            powershell 'Write-Host "Build failed"'
         }
         success {
-            bat 'echo "Build succeeded"'
+            powershell 'Write-Host "Build succeeded"'
         }
     }
 }

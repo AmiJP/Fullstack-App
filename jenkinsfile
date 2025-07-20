@@ -13,17 +13,17 @@ pipeline {
         }
         stage('Run Tests') {
             steps {
-                sh 'npm test'
+                bat 'npm test'
             }
         }
         stage('Build (if needed)') {
             steps {
-                sh 'npm run build' 
+                bat 'npm run build' 
             }
         }
         stage('Deploy') {
             steps {
-                sh '''
+                bat '''
                     echo "Deploy steps go here: e.g., scp files to server, ssh and restart service, etc."
                 '''
             }
